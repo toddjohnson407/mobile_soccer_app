@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vibrate/vibrate.dart';
+import 'dart:async';
 
 void main() => runApp(SoccerApp ());
 
@@ -21,7 +23,6 @@ void calculateResults() {
 
   var playersPerSubstitution = playerAmount - playersInAmount;
   var substitutionTotal = totalTime / substitutionFrequency;
-  var startingIndex = playerAmount - playersInAmount - 1;
   var index = 0;
   var cycleCount = 0;
   var lastPlayer = 0;
@@ -92,26 +93,43 @@ void calculateResults() {
     var output = <Widget>[];
 
     output.add(new Container(
+        width: 300.0,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black, width: 1.5), top: BorderSide(color: Colors.black, width: 1.5))),
         padding: EdgeInsets.only(left: 0.0, top: 8.0, right: 0.0, bottom: 2.0),
         child: new Text(
-            'Time: ${i * substitutionFrequency}:00'
+            'Time: ${i * substitutionFrequency}:00',
+            style: TextStyle(color: Colors.white)
         )
     ));
 
     if (i > 0) {
-      output.add(new Container(
-          padding: EdgeInsets.only(left: 35.0, top: 2.0, right: 35.0, bottom: 2.0),
-          child: new Text(
-              '${playersIn.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(',', ' and')} in for ${playersOut.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(',', ' and')}'
+      output.add(
+        new Container(
+            width: 300.0,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black, width: 1.5))),
+        padding: EdgeInsets.only(left: 35.0, top: 6.0, right: 35.0, bottom: 3.5),
+        child:
+          Center(
+            child: new Text(
+              '${playersIn.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(',', ' and')} in for ${playersOut.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(',', ' and')}',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white),
+            )
           )
-      ));
+        )
+      );
     }
 
     for (var play in playingArray) {
       output.add(new Container(
-          padding: EdgeInsets.only(left: 35.0, top: 2.0, right: 35.0, bottom: 5.0),
+        width: 300.0,
+          alignment: Alignment.center,
+          padding: EdgeInsets.only(left: 35.0, top: 8.0, right: 35.0, bottom: 8.0),
           child: new Text(
-          '$play'
+          '$play',
+            style: TextStyle(color: Colors.white),
       )
       ));
     }
@@ -120,15 +138,16 @@ void calculateResults() {
 
     playerCharts.add(
       new Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 2.0, style: BorderStyle.none)),
         child: Center(
           child: Card(
-            color: Colors.blue,
+            elevation: 3.0,
+            color: Colors.black,
               margin: EdgeInsets.all(10.0),
               child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: output
               )
-//          mainAxisSize: MainAxisSize.min,
           )
         )
       )
@@ -146,14 +165,31 @@ void calculateResults() {
       playersOut.add(playingArray[0 + p]);
     }
   }
+
+  playerCharts.add(
+    new Container(
+      margin: EdgeInsets.only(top: 15.0, bottom: 10.0),
+      child: Center(
+        child: new MaterialButton(
+          child: new Text(
+              'Start Game',
+              style: TextStyle(color: Colors.white)),
+          color: Colors.black,
+          onPressed: null,
+        )
+      )
+    )
+  );
+
 }
 
-
+// main application widget
 class SoccerApp extends StatelessWidget {
   @override
+
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Soccer Substitutions',
+      title: 'SUB OUT',
       home: InputFields(),
       routes: <String, WidgetBuilder> {
 //        '/playerNames': (BuildContext context) => MyPage(title: 'Player Names')
@@ -171,13 +207,16 @@ class SubstitutionResults extends StatefulWidget {
 // creates time based substitution widgets
 class SubstitutionResultsState extends State<SubstitutionResults> {
   @override
+  bool _canVibrate = true;
 
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text("Results")
       ),
       body: new Container(
+        margin: EdgeInsets.only(top: 20.0),
         child: new ListView(
           children:
             playerCharts
@@ -193,6 +232,7 @@ class PlayerNames extends StatefulWidget {
   PlayerNamesState createState() => new PlayerNamesState();
 }
 
+// create player names from user input
 class PlayerNamesState extends State<PlayerNames> {
   @override
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -228,7 +268,7 @@ class PlayerNamesState extends State<PlayerNames> {
           child: new Text(
               'Submit',
               style: TextStyle(color: Colors.white)),
-          color: Colors.blue,
+          color: Colors.black,
           onPressed: () {
             this.submit();
             calculateResults();
@@ -243,7 +283,8 @@ class PlayerNamesState extends State<PlayerNames> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Player Names")
+        title: Text("Player Names"),
+        backgroundColor: Colors.black,
       ),
       body: new Container(
         margin: new EdgeInsets.only(top: 15.0),
@@ -320,7 +361,7 @@ class InputFieldsState extends State<InputFields> {
           child: new Text(
               'Submit',
               style: TextStyle(color: Colors.white)),
-          color: Colors.blue,
+          color: Colors.black,
           onPressed: () {
 //            myController.dispose();
             this.submit();
@@ -335,7 +376,8 @@ class InputFieldsState extends State<InputFields> {
 
     return Scaffold (
       appBar: AppBar (
-        title: Text('Soccer Substitutions'),
+        title: Text('SUB OUT'),
+        backgroundColor: Colors.black,
         actions: <Widget>[      // Add 3 lines from here...
           new IconButton(icon: const Icon(Icons.refresh), onPressed: _pushSaved),
         ]
